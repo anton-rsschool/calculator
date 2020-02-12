@@ -45,6 +45,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.loadState();
     Promise.all([getVehicle(), getDealer()])
       .then((data) => {
         const [vehicle, dealer] = data;
@@ -75,6 +76,7 @@ class App extends Component {
     if (isChangePayment) {
       this.calculatePayment();
     }
+    this.saveState();
   }
 
   changeProp(prop) {
@@ -85,6 +87,21 @@ class App extends Component {
     this.setState({
       activeTab: tab,
     });
+  }
+
+  saveState() {
+    const {
+      homeZipCode, downPayment, tradeIn, creditScore, loanTerm, leaseTerm, apr, miles,
+    } = this.state;
+    const state = JSON.stringify({
+      homeZipCode, downPayment, tradeIn, creditScore, loanTerm, leaseTerm, apr, miles,
+    });
+    localStorage.setItem('calculatorState', state);
+  }
+
+  loadState() {
+    const state = JSON.parse(localStorage.getItem('calculatorState'));
+    this.setState(state);
   }
 
   calculatePayment() {
