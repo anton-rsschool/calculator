@@ -20,10 +20,13 @@ class InputFormField extends Component {
   }
 
   handleBlur() {
-    const { name, onChangeValue } = this.props;
+    const { name, onChangeValue, validation } = this.props;
     const { isValid, value } = this.state;
     if (isValid) {
       onChangeValue({ [name]: +value });
+      validation(name, true);
+    } else {
+      validation(name, false);
     }
   }
 
@@ -101,6 +104,7 @@ InputFormField.propTypes = {
   onChangeValue: PropTypes.func.isRequired,
   rules: PropTypes.arrayOf(PropTypes.any),
   row: PropTypes.bool,
+  validation: PropTypes.func,
 };
 
 InputFormField.defaultProps = {
@@ -108,6 +112,7 @@ InputFormField.defaultProps = {
   mask: '',
   maskPos: 'left',
   rules: [() => true, ''],
+  validation: () => true,
 };
 
 export default InputFormField;

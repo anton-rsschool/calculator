@@ -1,5 +1,4 @@
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -47,6 +46,7 @@ class Loan extends Component {
       apr,
       creditScore,
       msrp,
+      validation,
     } = this.props;
     return (
       <div className="loan">
@@ -66,9 +66,10 @@ class Loan extends Component {
           value={tradeIn}
           onChangeValue={onChangeProp}
           rules={
-            [(value) => (+value < msrp * 0.75),
-              'Only $18,377 has been applied to the payment, which is the maximum allowed 70% of the msrp price']
+            [(value) => (+value < msrp * 0.25),
+              `Only $${msrp * 0.25} has been applied to the payment, which is the maximum allowed 25% of the msrp price`]
           }
+          validation={validation}
         />
         <InputFormField
           label="Down Payment"
@@ -77,6 +78,11 @@ class Loan extends Component {
           name="downPayment"
           value={downPayment}
           onChangeValue={onChangeProp}
+          rules={
+            [(value) => (+value < msrp * 0.25),
+              `Only $${msrp * 0.25} has been applied to the payment, which is the maximum allowed 25% of the msrp price`]
+          }
+          validation={validation}
         />
         <BtnBar
           label="Approx. Credit Score"
@@ -108,6 +114,7 @@ Loan.propTypes = {
   apr: PropTypes.number.isRequired,
   msrp: PropTypes.number.isRequired,
   onChangeProp: PropTypes.func.isRequired,
+  validation: PropTypes.func.isRequired,
 };
 
 export default Loan;

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 import { getVehicle, getDealer } from '../../service/dataService';
-// import getIpData from '../../service/ipService';
+import getIpData from '../../service/ipService';
 import { calculateLease, calculateLoan } from '../../service/calculateService';
 import getCreditScoreValue from '../../utils/utils';
 import Tabs from '../Tabs';
@@ -11,6 +11,13 @@ import './App.scss';
 
 
 class App extends Component {
+  static handleKeydown(event) {
+    const { target, code } = event;
+    if (code === 'Enter' && target.nodeName === 'INPUT') {
+      target.blur();
+    }
+  }
+
   constructor() {
     super();
     this.state = {
@@ -25,7 +32,7 @@ class App extends Component {
         name: '',
       },
 
-      homeZipCode: 222222,
+      homeZipCode: 0,
       downPayment: 0,
       tradeIn: 0,
       creditScore: 750,
@@ -40,19 +47,23 @@ class App extends Component {
       loanPayment: 0,
       leasePayment: 0,
     };
+    this.isValid = {};
     this.changeActiveTab = this.changeActiveTab.bind(this);
     this.changeProp = this.changeProp.bind(this);
+    this.validation = this.validation.bind(this);
+    document.addEventListener('keydown', App.handleKeydown);
   }
 
   componentDidMount() {
     this.loadState();
-    Promise.all([getVehicle(), getDealer()])
+    Promise.all([getVehicle(), getDealer(), getIpData()])
       .then((data) => {
-        const [vehicle, dealer] = data;
+        const [vehicle, dealer, ip] = data;
+        const { homeZipCode } = this.state;
         this.setState({
           vehicle,
           dealer,
-          homeZipCode: 333333,
+          homeZipCode: homeZipCode || +ip.postal,
           isLoaded: true,
         });
         this.calculatePayment();
@@ -69,14 +80,20 @@ class App extends Component {
       loanTerm: newLoanTerm, leaseTerm: newLeaseTerm, apr: newApr, miles: newMiles,
     } = prevState;
 
+    const isValid = Object.keys(this.isValid).every((key) => this.isValid[key] === true);
+
     const isChangePayment = downPayment !== newDownPayment || tradeIn !== newTradeIn
     || creditScore !== newCreditScore || loanTerm !== newLoanTerm || leaseTerm !== newLeaseTerm
     || apr !== newApr || miles !== newMiles;
 
-    if (isChangePayment) {
+    if (isChangePayment && isValid) {
       this.calculatePayment();
     }
     this.saveState();
+  }
+
+  validation(name, isValid) {
+    this.isValid[name] = isValid;
   }
 
   changeProp(prop) {
@@ -144,6 +161,7 @@ class App extends Component {
           loanPayment={loanPayment}
           leasePayment={leasePayment}
           isCalculate={isCalculate}
+          validation={this.validation}
         />
         <InfoCard
           isCalculate={isCalculate}

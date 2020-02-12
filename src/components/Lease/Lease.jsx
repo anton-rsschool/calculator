@@ -20,14 +20,8 @@ class Lease extends Component {
 
   render() {
     const {
-      homeZipCode,
-      downPayment,
-      tradeIn,
-      creditScore,
-      onChangeProp,
-      leaseTerm,
-      miles,
-      msrp,
+      homeZipCode, downPayment, tradeIn, creditScore, onChangeProp, leaseTerm, miles, msrp,
+      validation,
     } = this.props;
     return (
       <form className="lease">
@@ -46,9 +40,10 @@ class Lease extends Component {
           onChangeValue={onChangeProp}
           mask="$"
           rules={
-            [(value) => (+value < msrp * 0.75),
-              `Max value $${msrp * 0.75} `]
+            [(value) => (+value < msrp * 0.25),
+              `Max value $${msrp * 0.25} `]
           }
+          validation={validation}
         />
         <SelectFormField
           label="Term (Month)"
@@ -63,6 +58,11 @@ class Lease extends Component {
           value={downPayment}
           onChangeValue={onChangeProp}
           mask="$"
+          rules={
+            [(value) => (+value < msrp * 0.25),
+              `Max value $${msrp * 0.25} `]
+          }
+          validation={validation}
         />
         <SelectFormField
           label="Annual Miles"
@@ -85,6 +85,7 @@ Lease.propTypes = {
   miles: PropTypes.number.isRequired,
   msrp: PropTypes.number.isRequired,
   onChangeProp: PropTypes.func.isRequired,
+  validation: PropTypes.func.isRequired,
 };
 
 export default Lease;

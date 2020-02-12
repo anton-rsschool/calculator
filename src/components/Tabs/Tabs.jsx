@@ -25,6 +25,7 @@ const Tabs = ({
   leasePayment,
   loanPayment,
   isCalculate,
+  validation,
 }) => {
   let tab;
   if (activeTab === 'lease') {
@@ -38,6 +39,7 @@ const Tabs = ({
         miles={miles}
         onChangeProp={onChangeProp}
         msrp={msrp}
+        validation={validation}
       />
     );
   } else {
@@ -51,6 +53,7 @@ const Tabs = ({
         apr={apr}
         msrp={msrp}
         onChangeProp={onChangeProp}
+        validation={validation}
       />
     );
   }
@@ -90,6 +93,7 @@ Tabs.propTypes = {
   loanPayment: PropTypes.number.isRequired,
   leasePayment: PropTypes.number.isRequired,
   onChangeTab: PropTypes.func.isRequired,
+  validation: PropTypes.func.isRequired,
 };
 
 export default Tabs;
