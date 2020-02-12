@@ -1,0 +1,18 @@
+.info-card {
+  width: 340px;
+  padding: 10px 20px;
+
+  border: 1px solid gray;
+  border-radius: 5px;
+
+  &__field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &--sep {
+      border-bottom: 1px solid #dddddd;
+    }
+  }
+}
+

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { getVehicle, getDealer } from '../../service/dataService';
 // import getIpData from '../../service/ipService';
 import Tabs from '../Tabs';
+import InfoCard from '../InfoCard';
 import './App.scss';
 
 
@@ -71,9 +72,10 @@ class App extends Component {
       creditScore,
       leaseTerm,
       miles,
+      dealer,
       loanTerm,
       apr,
-      vehicle: { msrp },
+      vehicle: { msrp, name },
       isLoaded,
       activeTab,
       loanPayment,
@@ -99,6 +101,13 @@ class App extends Component {
           loanPayment={loanPayment}
           leasePayment={leasePayment}
           isCalculate={isCalculate}
+        />
+        <InfoCard
+          isCalculate={isCalculate}
+          vehicle={{ name, msrp }}
+          dealer={dealer}
+          homeZipCode={homeZipCode}
+          monthlyPayment={activeTab === 'loan' ? loanPayment : leasePayment}
         />
       </div>
     );
