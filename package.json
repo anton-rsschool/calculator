@@ -8,7 +8,8 @@
     "clean": "rm -f -r dist",
     "build-dev": "webpack -d --mode development",
     "build-prod": "webpack -p",
-    "start": "webpack-dev-server --open --mode development"
+    "start": "webpack-dev-server --open --mode development",
+    "lint": "eslint ./src/**/*.js"
   },
   "author": "Anton Mukhin",
   "license": "ISC",
