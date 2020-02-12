@@ -101,8 +101,12 @@ class App extends Component {
   }
 
   changeActiveTab(tab) {
-    this.setState({
-      activeTab: tab,
+    // eslint-disable-next-line consistent-return
+    this.setState(({ activeTab }) => {
+      if (tab !== activeTab) {
+        this.isValid = {};
+        return { activeTab: tab };
+      }
     });
   }
 
