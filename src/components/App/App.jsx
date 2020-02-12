@@ -1,7 +1,10 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 
 import { getVehicle, getDealer } from '../../service/dataService';
 // import getIpData from '../../service/ipService';
+import { calculateLease, calculateLoan } from '../../service/calculateService';
+import getCreditScoreValue from '../../utils/utils';
 import Tabs from '../Tabs';
 import InfoCard from '../InfoCard';
 import './App.scss';
@@ -51,7 +54,27 @@ class App extends Component {
           homeZipCode: 333333,
           isLoaded: true,
         });
+        this.calculatePayment();
       });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      downPayment, tradeIn, creditScore, loanTerm, leaseTerm, apr, miles,
+    } = this.state;
+
+    const {
+      downPayment: newDownPayment, tradeIn: newTradeIn, creditScore: newCreditScore,
+      loanTerm: newLoanTerm, leaseTerm: newLeaseTerm, apr: newApr, miles: newMiles,
+    } = prevState;
+
+    const isChangePayment = downPayment !== newDownPayment || tradeIn !== newTradeIn
+    || creditScore !== newCreditScore || loanTerm !== newLoanTerm || leaseTerm !== newLeaseTerm
+    || apr !== newApr || miles !== newMiles;
+
+    if (isChangePayment) {
+      this.calculatePayment();
+    }
   }
 
   changeProp(prop) {
@@ -64,23 +87,26 @@ class App extends Component {
     });
   }
 
+  calculatePayment() {
+    const {
+      downPayment, tradeIn, creditScore, loanTerm, leaseTerm, apr, miles, vehicle: { msrp },
+    } = this.state;
+    this.setState({ isCalculate: false });
+    Promise.all(
+      [calculateLease(
+        downPayment, tradeIn, getCreditScoreValue(creditScore), leaseTerm, miles, msrp,
+      ),
+      calculateLoan(downPayment, tradeIn, getCreditScoreValue(creditScore), loanTerm, apr, msrp)],
+    ).then((data) => {
+      const [leasePayment, loanPayment] = data;
+      this.setState({ leasePayment, loanPayment, isCalculate: true });
+    });
+  }
+
   render() {
     const {
-      homeZipCode,
-      downPayment,
-      tradeIn,
-      creditScore,
-      leaseTerm,
-      miles,
-      dealer,
-      loanTerm,
-      apr,
-      vehicle: { msrp, name },
-      isLoaded,
-      activeTab,
-      loanPayment,
-      leasePayment,
-      isCalculate,
+      homeZipCode, downPayment, tradeIn, creditScore, leaseTerm, miles, dealer, loanTerm, apr,
+      vehicle: { msrp, name }, isLoaded, activeTab, loanPayment, leasePayment, isCalculate,
     } = this.state;
     return (
       <div className="app">
