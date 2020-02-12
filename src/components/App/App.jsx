@@ -164,6 +164,7 @@ class App extends Component {
           validation={this.validation}
         />
         <InfoCard
+          isLoaded={isLoaded}
           isCalculate={isCalculate}
           vehicle={{ name, msrp }}
           dealer={dealer}

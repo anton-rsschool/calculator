@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import TabsNav from '../TabsNav';
-import Spinner from '../common/Spinner';
+import BigSpinner from '../common/BigSpinner';
 import Lease from '../Lease';
 import Loan from '../Loan';
 
@@ -60,18 +60,24 @@ const Tabs = ({
 
   return (
     <div className="tabs">
-      <TabsNav
-        activeTab={activeTab}
-        onChangeTab={onChangeTab}
-        loanPayment={loanPayment}
-        leasePayment={leasePayment}
-        isCalculate={isCalculate}
-      />
-      <div className="tabs__body">
-        { isLoaded
-          ? tab
-          : <Spinner /> }
-      </div>
+      {
+        isLoaded ? (
+          <>
+            <TabsNav
+              activeTab={activeTab}
+              onChangeTab={onChangeTab}
+              loanPayment={loanPayment}
+              leasePayment={leasePayment}
+              isCalculate={isCalculate}
+            />
+            <div className="tabs__body">
+              {tab}
+            </div>
+          </>
+        ) : (
+          <BigSpinner />
+        )
+      }
     </div>
   );
 };
