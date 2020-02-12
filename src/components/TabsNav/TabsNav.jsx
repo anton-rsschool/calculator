@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Payment from '../common/Payment';
+import Toggle from '../common/Toggle';
+import Spinner from '../common/Spinner';
 import './TabsNav.scss';
 
 const TabsNav = ({
@@ -18,7 +20,11 @@ const TabsNav = ({
       onClick={() => { onChangeTab('loan'); }}
     >
       <p className="tabs-nav__title">Est. Loan:</p>
-      <Payment payment={loanPayment} isCalculate={isCalculate} />
+      <Toggle
+        flag={isCalculate}
+        renderComponent1={() => (<Payment payment={loanPayment} />)}
+        renderComponent2={() => (<Spinner />)}
+      />
     </button>
     <button
       className={`tabs-nav__button${activeTab === 'lease' ? ' tabs-nav__button--active' : ''}`}
@@ -26,7 +32,11 @@ const TabsNav = ({
       onClick={() => { onChangeTab('lease'); }}
     >
       <p className="tabs-nav__title">Est. Lease:</p>
-      <Payment payment={leasePayment} isCalculate={isCalculate} />
+      <Toggle
+        flag={isCalculate}
+        renderComponent1={() => (<Payment payment={leasePayment} />)}
+        renderComponent2={() => (<Spinner />)}
+      />
     </button>
   </div>
 );

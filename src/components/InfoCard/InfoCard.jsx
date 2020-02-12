@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import Payment from '../common/Payment';
 import BigSpinner from '../common/BigSpinner';
+import Spinner from '../common/Spinner';
+import Toggle from '../common/Toggle';
 import './InfoCard.scss';
 
 const InfoCard = ({
@@ -31,7 +33,11 @@ const InfoCard = ({
             </div>
             <div className="info-card__field">
               <p>Est. Loan Payment</p>
-              <Payment payment={monthlyPayment} isCalculate={isCalculate} />
+              <Toggle
+                flag={isCalculate}
+                renderComponent1={() => (<Payment payment={monthlyPayment} />)}
+                renderComponent2={() => (<Spinner />)}
+              />
             </div>
             <div className="info-card__field info-card__field--sep">
               <p>Taxes</p>
